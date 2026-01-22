@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Planetary Biology Field Collector</title>
+    <title>FieldScribe - Planetary Biology Field Data Collection</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=JetBrains+Mono:wght@400;600&display=swap');
         
@@ -359,8 +359,8 @@
 </head>
 <body>
     <header>
-        <h1>🌍 Planetary Biology</h1>
-        <div class="subtitle">Field Sample Collection</div>
+        <h1>✍️ FieldScribe</h1>
+        <div class="subtitle">Field Data Collection for Planetary Biology</div>
     </header>
     
     <div class="container">
@@ -373,6 +373,23 @@
             <div class="status-item">
                 <div class="status-dot active"></div>
                 <span>Offline Ready</span>
+            </div>
+        </div>
+        
+        <!-- Sample Category Selection -->
+        <div class="form-section">
+            <div class="section-header">
+                <span class="section-icon">🎯</span>
+                <h2 class="section-title">Sample Category</h2>
+            </div>
+            
+            <div class="form-group">
+                <label>What are you collecting?<span class="required">*</span></label>
+                <select id="sample-category" onchange="updateFormFields()" required>
+                    <option value="">Select sample type...</option>
+                    <option value="organism">Organism/Specimen</option>
+                    <option value="environmental">Environmental Sample</option>
+                </select>
             </div>
         </div>
         
@@ -405,8 +422,8 @@
             </div>
         </div>
         
-        <!-- Taxonomy Section -->
-        <div class="form-section">
+        <!-- Taxonomy Section (Organisms Only) -->
+        <div class="form-section" id="taxonomy-section" style="display: none;">
             <div class="section-header">
                 <span class="section-icon">🔬</span>
                 <h2 class="section-title">Taxonomy</h2>
@@ -414,7 +431,7 @@
             
             <div class="form-group">
                 <label>Kingdom<span class="required">*</span></label>
-                <select id="kingdom" onchange="updateTaxonomyFields()" required>
+                <select id="kingdom" onchange="updateTaxonomyFields()">
                     <option value="">Select kingdom...</option>
                     <option value="animalia">Animalia (Animals)</option>
                     <option value="plantae">Plantae (Plants)</option>
@@ -425,7 +442,7 @@
             
             <div class="form-group">
                 <label>Scientific Name<span class="required">*</span></label>
-                <input type="text" id="species" placeholder="Genus species" required>
+                <input type="text" id="species" placeholder="Genus species">
                 <div class="help-text">Use binomial nomenclature (e.g., Homo sapiens)</div>
             </div>
             
@@ -475,6 +492,105 @@
                     <option value="">Select kingdom first...</option>
                 </select>
                 <div class="help-text">Type of tissue or material collected</div>
+            </div>
+        </div>
+        
+        <!-- Environmental Sample Section -->
+        <div class="form-section" id="environmental-section" style="display: none;">
+            <div class="section-header">
+                <span class="section-icon">🌊</span>
+                <h2 class="section-title">Environmental Sample Details</h2>
+            </div>
+            
+            <div class="form-group">
+                <label>Environmental Sample Type<span class="required">*</span></label>
+                <select id="env-sample-type">
+                    <option value="">Select type...</option>
+                    <option value="water-freshwater">Water (Freshwater)</option>
+                    <option value="water-marine">Water (Marine)</option>
+                    <option value="water-brackish">Water (Brackish)</option>
+                    <option value="soil">Soil</option>
+                    <option value="sediment">Sediment</option>
+                    <option value="air-filter">Air Filter</option>
+                    <option value="malaise-trap">Malaise Trap</option>
+                    <option value="spider-web">Spider Web</option>
+                    <option value="plant-debris">Plant Debris/Litter</option>
+                    <option value="snow-ice">Snow/Ice</option>
+                    <option value="other-env">Other Environmental</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label>Collection Method</label>
+                <select id="collection-method">
+                    <option value="">Select...</option>
+                    <option value="grab-sample">Grab Sample</option>
+                    <option value="core">Core Sample</option>
+                    <option value="net-tow">Net Tow</option>
+                    <option value="filtration">Filtration</option>
+                    <option value="trap">Trap</option>
+                    <option value="pumped">Pumped</option>
+                    <option value="sieved">Sieved</option>
+                    <option value="scraping">Scraping</option>
+                    <option value="other">Other</option>
+                </select>
+            </div>
+            
+            <div class="input-group">
+                <div class="form-group">
+                    <label>Sample Volume/Mass</label>
+                    <input type="number" id="sample-quantity" placeholder="Amount" step="0.01">
+                </div>
+                
+                <div class="form-group">
+                    <label>Unit</label>
+                    <select id="sample-unit">
+                        <option value="">Select...</option>
+                        <option value="L">Liters (L)</option>
+                        <option value="mL">Milliliters (mL)</option>
+                        <option value="m3">Cubic meters (m³)</option>
+                        <option value="kg">Kilograms (kg)</option>
+                        <option value="g">Grams (g)</option>
+                        <option value="mg">Milligrams (mg)</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="input-group">
+                <div class="form-group">
+                    <label>Filtration Details</label>
+                    <input type="text" id="filtration-details" placeholder="Filter size, type (e.g., 0.22 µm PVDF)">
+                    <div class="help-text">If applicable</div>
+                </div>
+                
+                <div class="form-group">
+                    <label>Deployment Duration</label>
+                    <input type="text" id="deployment-duration" placeholder="e.g., 24 hours, 7 days">
+                    <div class="help-text">For traps/filters</div>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label>Sample/Core Depth (m)</label>
+                <input type="number" id="sample-depth" placeholder="Depth of sample/core" step="0.01">
+                <div class="help-text">For soil cores, sediment, or subsurface samples</div>
+            </div>
+            
+            <div class="input-group">
+                <div class="form-group">
+                    <label>Salinity (ppt)</label>
+                    <input type="number" id="salinity" placeholder="Parts per thousand" step="0.1">
+                </div>
+                
+                <div class="form-group">
+                    <label>Dissolved Oxygen (mg/L)</label>
+                    <input type="number" id="dissolved-oxygen" placeholder="mg/L" step="0.1">
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label>Turbidity/Clarity</label>
+                <input type="text" id="turbidity" placeholder="NTU or visual description">
             </div>
         </div>
         
@@ -737,6 +853,39 @@
             }
         }
         
+        // Update form fields based on sample category
+        function updateFormFields() {
+            const category = document.getElementById('sample-category').value;
+            const taxonomySection = document.getElementById('taxonomy-section');
+            const environmentalSection = document.getElementById('environmental-section');
+            
+            if (category === 'organism') {
+                taxonomySection.style.display = 'block';
+                environmentalSection.style.display = 'none';
+                
+                // Make organism fields required
+                document.getElementById('kingdom').setAttribute('required', 'required');
+                document.getElementById('species').setAttribute('required', 'required');
+                
+                // Remove environmental required fields
+                document.getElementById('env-sample-type').removeAttribute('required');
+            } else if (category === 'environmental') {
+                taxonomySection.style.display = 'none';
+                environmentalSection.style.display = 'block';
+                
+                // Remove organism required fields
+                document.getElementById('kingdom').removeAttribute('required');
+                document.getElementById('species').removeAttribute('required');
+                
+                // Make environmental fields required
+                document.getElementById('env-sample-type').setAttribute('required', 'required');
+            } else {
+                // No category selected
+                taxonomySection.style.display = 'none';
+                environmentalSection.style.display = 'none';
+            }
+        }
+        
         // GPS Functions
         async function getLocation() {
             if (!navigator.geolocation) {
@@ -826,7 +975,18 @@
         
         // Save Sample
         function saveSample() {
-            const requiredFields = ['sample-id', 'collector', 'date', 'kingdom', 'species'];
+            const category = document.getElementById('sample-category').value;
+            
+            // Base required fields
+            const requiredFields = ['sample-id', 'collector', 'date', 'sample-category'];
+            
+            // Add category-specific required fields
+            if (category === 'organism') {
+                requiredFields.push('kingdom', 'species');
+            } else if (category === 'environmental') {
+                requiredFields.push('env-sample-type');
+            }
+            
             let isValid = true;
             
             requiredFields.forEach(field => {
@@ -849,17 +1009,35 @@
                 return;
             }
             
+            // Build sample object with all fields
             const sample = {
                 id: document.getElementById('sample-id').value,
                 collector: document.getElementById('collector').value,
                 date: document.getElementById('date').value,
-                kingdom: document.getElementById('kingdom').value,
-                species: document.getElementById('species').value,
-                taxid: document.getElementById('taxid').value,
-                commonName: document.getElementById('common-name').value,
-                sex: document.getElementById('sex').value,
-                lifeStage: document.getElementById('life-stage').value,
-                tissueType: document.getElementById('tissue-type').value,
+                category: category,
+                
+                // Organism fields
+                kingdom: category === 'organism' ? document.getElementById('kingdom').value : '',
+                species: category === 'organism' ? document.getElementById('species').value : '',
+                taxid: category === 'organism' ? document.getElementById('taxid').value : '',
+                commonName: category === 'organism' ? document.getElementById('common-name').value : '',
+                sex: category === 'organism' ? document.getElementById('sex').value : '',
+                lifeStage: category === 'organism' ? document.getElementById('life-stage').value : '',
+                tissueType: category === 'organism' ? document.getElementById('tissue-type').value : '',
+                
+                // Environmental fields
+                envSampleType: category === 'environmental' ? document.getElementById('env-sample-type').value : '',
+                collectionMethod: category === 'environmental' ? document.getElementById('collection-method').value : '',
+                sampleQuantity: category === 'environmental' ? document.getElementById('sample-quantity').value : '',
+                sampleUnit: category === 'environmental' ? document.getElementById('sample-unit').value : '',
+                filtrationDetails: category === 'environmental' ? document.getElementById('filtration-details').value : '',
+                deploymentDuration: category === 'environmental' ? document.getElementById('deployment-duration').value : '',
+                sampleDepth: category === 'environmental' ? document.getElementById('sample-depth').value : '',
+                salinity: category === 'environmental' ? document.getElementById('salinity').value : '',
+                dissolvedOxygen: category === 'environmental' ? document.getElementById('dissolved-oxygen').value : '',
+                turbidity: category === 'environmental' ? document.getElementById('turbidity').value : '',
+                
+                // Shared location fields
                 latitude: currentLocation.latitude,
                 longitude: currentLocation.longitude,
                 accuracy: currentLocation.accuracy,
@@ -887,8 +1065,11 @@
         // Clear Form
         function clearForm() {
             const currentCollector = document.getElementById('collector').value;
+            const currentCategory = document.getElementById('sample-category').value;
             
             document.getElementById('sample-id').value = '';
+            
+            // Organism fields
             document.getElementById('kingdom').value = '';
             document.getElementById('species').value = '';
             document.getElementById('taxid').value = '';
@@ -896,6 +1077,20 @@
             document.getElementById('sex').value = '';
             document.getElementById('life-stage').value = '';
             document.getElementById('tissue-type').value = '';
+            
+            // Environmental fields
+            document.getElementById('env-sample-type').value = '';
+            document.getElementById('collection-method').value = '';
+            document.getElementById('sample-quantity').value = '';
+            document.getElementById('sample-unit').value = '';
+            document.getElementById('filtration-details').value = '';
+            document.getElementById('deployment-duration').value = '';
+            document.getElementById('sample-depth').value = '';
+            document.getElementById('salinity').value = '';
+            document.getElementById('dissolved-oxygen').value = '';
+            document.getElementById('turbidity').value = '';
+            
+            // Shared fields
             document.getElementById('altitude').value = '';
             document.getElementById('depth').value = '';
             document.getElementById('habitat').value = '';
@@ -909,9 +1104,13 @@
             currentLocation = null;
             document.getElementById('gps-coordinates').innerHTML = 'No location data yet. Click button to capture GPS.';
             
-            // Keep collector name from current input or last sample
+            // Keep collector name and sample category
             document.getElementById('collector').value = currentCollector;
+            document.getElementById('sample-category').value = currentCategory;
             document.getElementById('date').valueAsDate = new Date();
+            
+            // Maintain form visibility based on category
+            updateFormFields();
         }
         
         // Update Samples List
@@ -931,19 +1130,25 @@
                 `;
                 exportBtn.disabled = true;
             } else {
-                samplesList.innerHTML = samples.map((sample, index) => `
+                samplesList.innerHTML = samples.map((sample, index) => {
+                    const categoryLabel = sample.category === 'organism' ? '🔬' : '🌊';
+                    const mainInfo = sample.category === 'organism' 
+                        ? sample.species 
+                        : sample.envSampleType?.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+                    
+                    return `
                     <div class="sample-card">
                         <div class="sample-info">
-                            <div class="sample-id">${sample.id}</div>
+                            <div class="sample-id">${categoryLabel} ${sample.id}</div>
                             <div class="sample-meta">
-                                ${sample.species} • ${sample.date} • ${sample.collector}
+                                ${mainInfo} • ${sample.date} • ${sample.collector}
                             </div>
                         </div>
                         <button class="btn-delete" onclick="deleteSample(${index})" title="Delete sample">
                             🗑️
                         </button>
                     </div>
-                `).join('');
+                `}).join('');
                 exportBtn.disabled = false;
             }
         }
@@ -966,17 +1171,30 @@
             }
             
             const headers = [
-                'Sample ID', 'Collector', 'Date', 'Kingdom', 'Scientific Name', 'NCBI TaxID', 'Common Name',
-                'Sex', 'Life Stage', 'Tissue Type',
-                'Latitude', 'Longitude', 'GPS Accuracy (m)', 'Altitude (m)', 'Depth (m)',
+                'Sample ID', 'Collector', 'Date', 'Sample Category',
+                // Organism fields
+                'Kingdom', 'Scientific Name', 'NCBI TaxID', 'Common Name', 'Sex', 'Life Stage', 'Tissue Type',
+                // Environmental fields
+                'Env Sample Type', 'Collection Method', 'Sample Quantity', 'Sample Unit', 
+                'Filtration Details', 'Deployment Duration', 'Sample/Core Depth (m)', 
+                'Salinity (ppt)', 'Dissolved Oxygen (mg/L)', 'Turbidity',
+                // Shared location fields
+                'Latitude', 'Longitude', 'GPS Accuracy (m)', 'Altitude (m)', 'Water Depth (m)',
                 'Habitat Type', 'Temperature (°C)', 'pH', 'Notes', 'Timestamp'
             ];
             
             const rows = samples.map(s => [
-                s.id, s.collector, s.date, s.kingdom, s.species, s.taxid || '', s.commonName || '',
-                s.sex, s.lifeStage, s.tissueType,
-                s.latitude, s.longitude, s.accuracy, s.altitude, s.depth,
-                s.habitat, s.temperature, s.ph, s.notes, s.timestamp
+                s.id, s.collector, s.date, s.category,
+                // Organism fields
+                s.kingdom || '', s.species || '', s.taxid || '', s.commonName || '', 
+                s.sex || '', s.lifeStage || '', s.tissueType || '',
+                // Environmental fields
+                s.envSampleType || '', s.collectionMethod || '', s.sampleQuantity || '', s.sampleUnit || '',
+                s.filtrationDetails || '', s.deploymentDuration || '', s.sampleDepth || '',
+                s.salinity || '', s.dissolvedOxygen || '', s.turbidity || '',
+                // Shared location fields
+                s.latitude, s.longitude, s.accuracy, s.altitude || '', s.depth || '',
+                s.habitat || '', s.temperature || '', s.ph || '', s.notes || '', s.timestamp
             ]);
             
             let csv = headers.join(',') + '\n';
@@ -988,7 +1206,7 @@
             const url = window.URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;
-            a.download = `planetary-bio-samples-${new Date().toISOString().split('T')[0]}.csv`;
+            a.download = `fieldscribe-samples-${new Date().toISOString().split('T')[0]}.csv`;
             a.click();
             
             showToast('Data exported successfully! 📊', 'success');
